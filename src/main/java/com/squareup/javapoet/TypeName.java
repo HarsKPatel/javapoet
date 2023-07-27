@@ -15,28 +15,16 @@
  */
 package com.squareup.javapoet;
 
-import java.io.IOException;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.ErrorType;
-import javax.lang.model.type.NoType;
-import javax.lang.model.type.PrimitiveType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.*;
 import javax.lang.model.util.SimpleTypeVisitor8;
+import java.io.IOException;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * Any type in Java's type system, plus {@code void}. This class is an identifier for primitive
@@ -86,6 +74,20 @@ public class TypeName {
   private static final ClassName BOXED_CHAR = ClassName.get("java.lang", "Character");
   private static final ClassName BOXED_FLOAT = ClassName.get("java.lang", "Float");
   private static final ClassName BOXED_DOUBLE = ClassName.get("java.lang", "Double");
+
+  private static final Map<TypeName, TypeName> UNBOXING_MAP = new HashMap<>();
+
+  static {
+    UNBOXING_MAP.put(BOXED_VOID, VOID);
+    UNBOXING_MAP.put(BOXED_BOOLEAN, BOOLEAN);
+    UNBOXING_MAP.put(BOXED_BYTE, BYTE);
+    UNBOXING_MAP.put(BOXED_SHORT, SHORT);
+    UNBOXING_MAP.put(BOXED_INT, INT);
+    UNBOXING_MAP.put(BOXED_LONG, LONG);
+    UNBOXING_MAP.put(BOXED_CHAR, CHAR);
+    UNBOXING_MAP.put(BOXED_FLOAT, FLOAT);
+    UNBOXING_MAP.put(BOXED_DOUBLE, DOUBLE);
+  }
 
   /** The name of this type if it is a keyword, or null. */
   private final String keyword;
@@ -180,15 +182,12 @@ public class TypeName {
    */
   public TypeName unbox() {
     if (keyword != null) return this; // Already unboxed.
-    if (this.equals(BOXED_VOID)) return VOID;
-    if (this.equals(BOXED_BOOLEAN)) return BOOLEAN;
-    if (this.equals(BOXED_BYTE)) return BYTE;
-    if (this.equals(BOXED_SHORT)) return SHORT;
-    if (this.equals(BOXED_INT)) return INT;
-    if (this.equals(BOXED_LONG)) return LONG;
-    if (this.equals(BOXED_CHAR)) return CHAR;
-    if (this.equals(BOXED_FLOAT)) return FLOAT;
-    if (this.equals(BOXED_DOUBLE)) return DOUBLE;
+
+    TypeName unboxed = UNBOXING_MAP.get(this);
+    if (unboxed != null) {
+      return unboxed;
+    }
+
     throw new UnsupportedOperationException("cannot unbox " + this);
   }
 
