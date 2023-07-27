@@ -62,21 +62,17 @@ final class CodeWriter {
   }
 
   CodeWriter(Appendable out, String indent, Set<String> staticImports, Set<String> alwaysQualify) {
-    this(out, indent, Collections.emptyMap(), staticImports, alwaysQualify);
+    this(new CodeWriterParameters(out, indent, Collections.emptyMap(), staticImports, alwaysQualify));
   }
 
-  CodeWriter(Appendable out,
-      String indent,
-      Map<String, ClassName> importedTypes,
-      Set<String> staticImports,
-      Set<String> alwaysQualify) {
-    this.out = new LineWrapper(out, indent, 100);
-    this.indent = checkNotNull(indent, "indent == null");
-    this.importedTypes = checkNotNull(importedTypes, "importedTypes == null");
-    this.staticImports = checkNotNull(staticImports, "staticImports == null");
-    this.alwaysQualify = checkNotNull(alwaysQualify, "alwaysQualify == null");
+  CodeWriter(CodeWriterParameters codeWriterParameters) {
+    this.out = new LineWrapper(codeWriterParameters.getOut(), codeWriterParameters.getIndent(), 100);
+    this.indent = checkNotNull(codeWriterParameters.getIndent(), "indent == null");
+    this.importedTypes = checkNotNull(codeWriterParameters.getImportedTypes(), "importedTypes == null");
+    this.staticImports = checkNotNull(codeWriterParameters.getStaticImports(), "staticImports == null");
+    this.alwaysQualify = checkNotNull(codeWriterParameters.getAlwaysQualify(), "alwaysQualify == null");
     this.staticImportClassNames = new LinkedHashSet<>();
-    for (String signature : staticImports) {
+    for (String signature : codeWriterParameters.getStaticImports()) {
       staticImportClassNames.add(signature.substring(0, signature.lastIndexOf('.')));
     }
   }

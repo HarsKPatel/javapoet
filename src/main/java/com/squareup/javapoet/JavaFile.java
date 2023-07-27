@@ -86,7 +86,7 @@ public final class JavaFile {
 
     // Second pass: write the code, taking advantage of the imports.
     CodeWriter codeWriter
-        = new CodeWriter(out, indent, suggestedImports, staticImports, alwaysQualify);
+        = new CodeWriter(new CodeWriterParameters(out, indent, suggestedImports, staticImports, alwaysQualify));
     emit(codeWriter);
   }
 
