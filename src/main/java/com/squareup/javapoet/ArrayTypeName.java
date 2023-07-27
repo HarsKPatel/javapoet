@@ -15,6 +15,8 @@
  */
 package com.squareup.javapoet;
 
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.type.ArrayType;
 import java.io.IOException;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Type;
@@ -22,8 +24,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.type.ArrayType;
 
 import static com.squareup.javapoet.Util.checkNotNull;
 
@@ -52,15 +52,8 @@ public final class ArrayTypeName extends TypeName {
   }
 
   CodeWriter emit(CodeWriter out, boolean varargs) throws IOException {
-    emitLeafType(out);
+    TypeName.emitLeafType(componentType,out); //called the method from TypeName Class
     return emitBrackets(out, varargs);
-  }
-
-  private CodeWriter emitLeafType(CodeWriter out) throws IOException {
-    if (TypeName.asArray(componentType) != null) {
-      return TypeName.asArray(componentType).emitLeafType(out);
-    }
-    return componentType.emit(out);
   }
 
   private CodeWriter emitBrackets(CodeWriter out, boolean varargs) throws IOException {

@@ -317,6 +317,12 @@ public class TypeName {
     }, null);
   }
 
+  protected static CodeWriter emitLeafType(TypeName type, CodeWriter out) throws IOException {
+    if (asArray(type) != null) {
+      return emitLeafType(asArray(type).componentType, out);
+    }
+    return type.emit(out);
+  }
   /** Returns a type name equivalent to {@code type}. */
   public static TypeName get(Type type) {
     return get(type, new LinkedHashMap<>());
