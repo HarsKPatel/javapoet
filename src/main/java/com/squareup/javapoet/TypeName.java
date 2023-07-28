@@ -222,7 +222,7 @@ public class TypeName {
     if (keyword == null) throw new AssertionError();
 
     if (isAnnotated()) {
-      out.emit("");
+      out.emitAndIndent("");
       emitAnnotations(out);
     }
     return out.emitAndIndent(keyword);
@@ -231,7 +231,7 @@ public class TypeName {
   CodeWriter emitAnnotations(CodeWriter out) throws IOException {
     for (AnnotationSpec annotation : annotations) {
       annotation.emit(out, true);
-      out.emit(" ");
+      out.emitAndIndent(" ");
     }
     return out;
   }

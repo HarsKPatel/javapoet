@@ -94,7 +94,7 @@ public final class CodeBlock {
   @Override public String toString() {
     StringBuilder out = new StringBuilder();
     try {
-      new CodeWriter(out).emit(this);
+      new CodeWriter(out).emit(this, false);
       return out.toString();
     } catch (IOException e) {
       throw new AssertionError();

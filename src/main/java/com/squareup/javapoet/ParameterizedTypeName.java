@@ -67,12 +67,12 @@ public final class ParameterizedTypeName extends TypeName {
   @Override CodeWriter emit(CodeWriter out) throws IOException {
     if (enclosingType != null) {
       enclosingType.emit(out);
-      out.emit(".");
+      out.emitAndIndent(".");
       if (isAnnotated()) {
-        out.emit(" ");
+        out.emitAndIndent(" ");
         emitAnnotations(out);
       }
-      out.emit(rawType.simpleName());
+      out.emitAndIndent(rawType.simpleName());
     } else {
       rawType.emit(out);
     }

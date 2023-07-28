@@ -257,7 +257,7 @@ public final class ClassName extends TypeName implements Comparable<ClassName> {
       String simpleName;
       if (charsEmitted) {
         // We've already emitted an enclosing class. Emit as we go.
-        out.emit(".");
+        out.emitAndIndent(".");
         simpleName = className.simpleName;
 
       } else if (className.isAnnotated() || className == this) {
@@ -278,11 +278,11 @@ public final class ClassName extends TypeName implements Comparable<ClassName> {
       }
 
       if (className.isAnnotated()) {
-        if (charsEmitted) out.emit(" ");
+        if (charsEmitted) out.emitAndIndent(" ");
         className.emitAnnotations(out);
       }
 
-      out.emit(simpleName);
+      out.emitAndIndent(simpleName);
       charsEmitted = true;
     }
 

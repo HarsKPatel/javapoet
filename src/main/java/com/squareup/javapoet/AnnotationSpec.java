@@ -62,7 +62,7 @@ public final class AnnotationSpec {
       // @Named("foo")
       codeWriter.emit("@$T(", type);
       emitAnnotationValues(codeWriter, whitespace, memberSeparator, members.get("value"));
-      codeWriter.emit(")");
+      codeWriter.emitAndIndent(")");
     } else {
       // Inline:
       //   @Column(name = "updated_at", nullable = false)
@@ -79,10 +79,10 @@ public final class AnnotationSpec {
         Map.Entry<String, List<CodeBlock>> entry = i.next();
         codeWriter.emit("$L = ", entry.getKey());
         emitAnnotationValues(codeWriter, whitespace, memberSeparator, entry.getValue());
-        if (i.hasNext()) codeWriter.emit(memberSeparator);
+        if (i.hasNext()) codeWriter.emitAndIndent(memberSeparator);
       }
       codeWriter.unindent(2);
-      codeWriter.emit(whitespace + ")");
+      codeWriter.emitAndIndent(whitespace + ")");
     }
   }
 
@@ -90,21 +90,21 @@ public final class AnnotationSpec {
       String memberSeparator, List<CodeBlock> values) throws IOException {
     if (values.size() == 1) {
       codeWriter.indent(2);
-      codeWriter.emit(values.get(0));
+      codeWriter.emit(values.get(0), false);
       codeWriter.unindent(2);
       return;
     }
 
-    codeWriter.emit("{" + whitespace);
+    codeWriter.emitAndIndent("{" + whitespace);
     codeWriter.indent(2);
     boolean first = true;
     for (CodeBlock codeBlock : values) {
-      if (!first) codeWriter.emit(memberSeparator);
-      codeWriter.emit(codeBlock);
+      if (!first) codeWriter.emitAndIndent(memberSeparator);
+      codeWriter.emit(codeBlock, false);
       first = false;
     }
     codeWriter.unindent(2);
-    codeWriter.emit(whitespace + "}");
+    codeWriter.emitAndIndent(whitespace + "}");
   }
 
   public static AnnotationSpec get(Annotation annotation) {

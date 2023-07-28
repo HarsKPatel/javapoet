@@ -88,7 +88,7 @@ public final class MethodSpec {
 
     if (!typeVariables.isEmpty()) {
       codeWriter.emitTypeVariables(typeVariables);
-      codeWriter.emit(" ");
+      codeWriter.emitAndIndent(" ");
     }
 
     if (isConstructor()) {
@@ -100,42 +100,42 @@ public final class MethodSpec {
     boolean firstParameter = true;
     for (Iterator<ParameterSpec> i = parameters.iterator(); i.hasNext(); ) {
       ParameterSpec parameter = i.next();
-      if (!firstParameter) codeWriter.emit(",").emitWrappingSpace();
+      if (!firstParameter) codeWriter.emitAndIndent(",").emitWrappingSpace();
       parameter.emit(codeWriter, !i.hasNext() && varargs);
       firstParameter = false;
     }
 
-    codeWriter.emit(")");
+    codeWriter.emitAndIndent(")");
 
     if (defaultValue != null && !defaultValue.isEmpty()) {
-      codeWriter.emit(" default ");
-      codeWriter.emit(defaultValue);
+      codeWriter.emitAndIndent(" default ");
+      codeWriter.emit(defaultValue, false);
     }
 
     if (!exceptions.isEmpty()) {
-      codeWriter.emitWrappingSpace().emit("throws");
+      codeWriter.emitWrappingSpace().emitAndIndent("throws");
       boolean firstException = true;
       for (TypeName exception : exceptions) {
-        if (!firstException) codeWriter.emit(",");
+        if (!firstException) codeWriter.emitAndIndent(",");
         codeWriter.emitWrappingSpace().emit("$T", exception);
         firstException = false;
       }
     }
 
     if (hasModifier(Modifier.ABSTRACT)) {
-      codeWriter.emit(";\n");
+      codeWriter.emitAndIndent(";\n");
     } else if (hasModifier(Modifier.NATIVE)) {
       // Code is allowed to support stuff like GWT JSNI.
-      codeWriter.emit(code);
-      codeWriter.emit(";\n");
+      codeWriter.emit(code, false);
+      codeWriter.emitAndIndent(";\n");
     } else {
-      codeWriter.emit(" {\n");
+      codeWriter.emitAndIndent(" {\n");
 
-      codeWriter.indent();
+      codeWriter.indent(1);
       codeWriter.emit(code, true);
-      codeWriter.unindent();
+      codeWriter.unindent(1);
 
-      codeWriter.emit("}\n");
+      codeWriter.emitAndIndent("}\n");
     }
     codeWriter.popTypeVariables(typeVariables);
   }

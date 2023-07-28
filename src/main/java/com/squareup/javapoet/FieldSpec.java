@@ -58,10 +58,10 @@ public final class FieldSpec {
     codeWriter.emitModifiers(modifiers, implicitModifiers);
     codeWriter.emit("$T $L", type, name);
     if (!initializer.isEmpty()) {
-      codeWriter.emit(" = ");
-      codeWriter.emit(initializer);
+      codeWriter.emitAndIndent(" = ");
+      codeWriter.emit(initializer, false);
     }
-    codeWriter.emit(";\n");
+    codeWriter.emitAndIndent(";\n");
   }
 
   @Override public boolean equals(Object o) {

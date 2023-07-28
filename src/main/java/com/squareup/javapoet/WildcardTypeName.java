@@ -63,7 +63,7 @@ public final class WildcardTypeName extends TypeName {
       return out.emit("? super $T", lowerBounds.get(0));
     }
     return upperBounds.get(0).equals(TypeName.OBJECT)
-        ? out.emit("?")
+        ? out.emitAndIndent("?")
         : out.emit("? extends $T", upperBounds.get(0));
   }
 

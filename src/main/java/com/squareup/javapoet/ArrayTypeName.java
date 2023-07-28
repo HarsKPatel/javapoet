@@ -58,15 +58,15 @@ public final class ArrayTypeName extends TypeName {
 
   private CodeWriter emitBrackets(CodeWriter out, boolean varargs) throws IOException {
     if (isAnnotated()) {
-      out.emit(" ");
+      out.emitAndIndent(" ");
       emitAnnotations(out);
     }
 
     if (TypeName.asArray(componentType) == null) {
       // Last bracket.
-      return out.emit(varargs ? "..." : "[]");
+      return out.emitAndIndent(varargs ? "..." : "[]");
     }
-    out.emit("[]");
+    out.emitAndIndent("[]");
     return TypeName.asArray(componentType) .emitBrackets(out, varargs);
   }
 

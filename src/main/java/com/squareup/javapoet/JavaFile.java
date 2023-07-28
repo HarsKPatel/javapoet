@@ -177,14 +177,14 @@ public final class JavaFile {
 
     if (!packageName.isEmpty()) {
       codeWriter.emit("package $L;\n", packageName);
-      codeWriter.emit("\n");
+      codeWriter.emitAndIndent("\n");
     }
 
     if (!staticImports.isEmpty()) {
       for (String signature : staticImports) {
         codeWriter.emit("import static $L;\n", signature);
       }
-      codeWriter.emit("\n");
+      codeWriter.emitAndIndent("\n");
     }
 
     int importedTypesCount = 0;
@@ -200,7 +200,7 @@ public final class JavaFile {
     }
 
     if (importedTypesCount > 0) {
-      codeWriter.emit("\n");
+      codeWriter.emitAndIndent("\n");
     }
 
     typeSpec.emit(codeWriter, null, Collections.emptySet());
